@@ -61,7 +61,7 @@ sessions (id, title, message_count, prompt_tokens, completion_tokens, cost)
 
 ## Token 统计
 
-库内 `sessions` 表自带用量统计，导出脚本末尾会打印：
+库内 `sessions` 表自带用量统计，导出脚本末尾会打印，并**固定写入脚本同目录 `token_stats.json`**（不进入 `crush_chat_jsonl/`，不污染归档）：
 
 ```bash
 [+] token 合计: prompt=170,085,457 completion=9,414,716 total=179,500,173
@@ -88,6 +88,19 @@ print('坏行',bad)"
 - 会话数与 `SELECT COUNT(*) FROM sessions` 一致（当前数据：21）
 - 每行 `role` 只能有 `user` / `assistant` 两种值
 - token 合计必须与 sessions 表 SUM 一致
+
+```json
+// token_stats.json 固定格式
+{
+  "tool": "crush",
+  "generated_at": "YYYY-MM-DD HH:MM:SS",
+  "source": "/root/.crush/crush.db",
+  "sessions_total": 21, "sessions_exported": 21, "lines_exported": 13739,
+  "prompt_tokens": 170085457, "completion_tokens": 9414716, "total_tokens": 179500173,
+  "sessions_detail": [ { "session_id", "title", "created_at", "exported_lines",
+                         "prompt_tokens", "completion_tokens", "total_tokens" } ]
+}
+```
 
 ## 常见失败
 

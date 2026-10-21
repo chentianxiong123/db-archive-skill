@@ -77,10 +77,23 @@ sessions/sk_v1_{key}.meta.json # {"key","summary","count","created_at","scope",.
 
 ## Token 统计说明
 
-DB 模式自动打印（只统计 user+assistant 对话）：
+DB 模式自动打印（只统计 user+assistant 对话），并**固定写入脚本同目录 `token_stats.json`**（不进入 `picoclaw_chat_jsonl/`，不污染归档）：
 
 ```bash
 [+] DB 模式: 3 会话, 44 行对话, token=11,888
+```
+
+```json
+// token_stats.json 固定格式
+{
+  "tool": "picoclaw",
+  "storage_mode": "db",
+  "generated_at": "YYYY-MM-DD HH:MM:SS",
+  "source": "~/.picoclaw/workspace/sessions/seahorse.db",
+  "sessions_total": 3, "sessions_exported": 3, "lines_exported": 44,
+  "dialogue_tokens": 11888,
+  "sessions_detail": [ { "session_id", "title", "created_at", "exported_lines", "dialogue_tokens" } ]
+}
 ```
 
 | 角色 | 消息数 | tokens |
