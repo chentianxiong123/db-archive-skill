@@ -41,6 +41,7 @@ def export(db_path=None, out_dir=None):
     total_lines = 0
     total_prompt = 0
     total_comp = 0
+    session_stats = []
     for sid, title, created, parent, pt, ct in sessions:
         msgs = conn.execute(
             "SELECT role, parts, created_at FROM messages WHERE session_id = ? ORDER BY created_at",
@@ -74,6 +75,15 @@ def export(db_path=None, out_dir=None):
                 if not text or text.startswith('diff --git'):
                     continue
                 lines.append(json.dumps({"role": role, "content": text}, ensure_ascii=False))
+        session_stats.append({
+            "session_id": sid,
+            "title": title or 'untitled',
+            "created_at": fmt_ts(created),
+            "exported_lines": len(lines),
+            "prompt_tokens": pt or 0,
+            "completion_tokens": ct or 0,
+            "total_tokens": (pt or 0) + (ct or 0),
+        })
         if not lines:
             continue
         fn = f"{safe(title or 'untitled')}_{fmt_ts(created)}.jsonl"
@@ -86,8 +96,26 @@ def export(db_path=None, out_dir=None):
         total_comp += (ct or 0)
         print(f"  {fn}  ({len(lines)} 行, prompt={pt or 0:,} comp={ct or 0:,})")
     conn.close()
+
+    # token 统计固定输出: 脚本所在目录 token_stats.json (不进入 chat_jsonl, 不污染归档)
+    stats_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "token_stats.json")
+    stats = {
+        "tool": "crush",
+        "generated_at": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        "source": db_path,
+        "sessions_total": len(sessions),
+        "sessions_exported": total_sessions,
+        "lines_exported": total_lines,
+        "prompt_tokens": total_prompt,
+        "completion_tokens": total_comp,
+        "total_tokens": total_prompt + total_comp,
+        "sessions_detail": session_stats,
+    }
+    with open(stats_path, "w", encoding="utf-8") as f:
+        json.dump(stats, f, ensure_ascii=False, indent=2)
     print(f"\n[+] {total_sessions} 个会话, {total_lines} 行对话 -> {out_dir}")
     print(f"[+] token 合计: prompt={total_prompt:,} completion={total_comp:,} total={total_prompt+total_comp:,}")
+    print(f"[+] token 统计: {stats_path}")
     return out_dir
 
 if __name__ == "__main__":

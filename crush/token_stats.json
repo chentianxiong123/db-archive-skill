@@ -1,0 +1,202 @@
+{
+  "tool": "crush",
+  "generated_at": "2026-10-21 12:17:28",
+  "source": "/root/.crush/crush.db",
+  "sessions_total": 21,
+  "sessions_exported": 21,
+  "lines_exported": 13739,
+  "prompt_tokens": 170085457,
+  "completion_tokens": 9414716,
+  "total_tokens": 179500173,
+  "sessions_detail": [
+    {
+      "session_id": "f740de85-b35c-4da8-95cc-2bdf164742bf",
+      "title": "帮我补充密钥， ssh zte-box root@192.168.31.208's password: 123456 之...",
+      "created_at": "20260812_060041",
+      "exported_lines": 752,
+      "prompt_tokens": 12490355,
+      "completion_tokens": 377351,
+      "total_tokens": 12867706
+    },
+    {
+      "session_id": "e50f8896-cd2c-4c11-8e6e-f7154c724236",
+      "title": "你帮我查一下，是不是听说这个pi agent 在 konsole里面有很多问题？ 你帮我查查看",
+      "created_at": "20260817_202941",
+      "exported_lines": 325,
+      "prompt_tokens": 13115317,
+      "completion_tokens": 194520,
+      "total_tokens": 13309837
+    },
+    {
+      "session_id": "43380b85-2ce1-4fc7-9ee3-ceaa3e3ce0a6",
+      "title": "Generate AGENTS.md for Codebase",
+      "created_at": "20260821_101335",
+      "exported_lines": 5,
+      "prompt_tokens": 13655,
+      "completion_tokens": 85,
+      "total_tokens": 13740
+    },
+    {
+      "session_id": "bcda0f43-6bf0-447d-95ad-1e916970855e",
+      "title": "/mnt/shared/qwen-chat 你帮我了解一下 我这个项目是什么东西",
+      "created_at": "20260828_153249",
+      "exported_lines": 674,
+      "prompt_tokens": 7722400,
+      "completion_tokens": 336303,
+      "total_tokens": 8058703
+    },
+    {
+      "session_id": "ccc60ab9-6b95-4853-8c95-992517ce14eb",
+      "title": "你你看看gh有什么项目，帮我看看有没有一个关于 webclone的项目",
+      "created_at": "20260829_044214",
+      "exported_lines": 929,
+      "prompt_tokens": 4457407,
+      "completion_tokens": 844026,
+      "total_tokens": 5301433
+    },
+    {
+      "session_id": "fde89483-6e53-4c53-85cd-87331bf199eb",
+      "title": "如果我想看听音乐有什么好的方法吗？ 不想付费交钱的话",
+      "created_at": "20260830_070222",
+      "exported_lines": 2809,
+      "prompt_tokens": 16296656,
+      "completion_tokens": 2681481,
+      "total_tokens": 18978137
+    },
+    {
+      "session_id": "1907071a-725f-4032-8235-515dc6f6741b",
+      "title": "ssh pve 帮我看看 现在吃内存最大的是谁 看看",
+      "created_at": "20260830_120740",
+      "exported_lines": 3296,
+      "prompt_tokens": 25655236,
+      "completion_tokens": 1401448,
+      "total_tokens": 27056684
+    },
+    {
+      "session_id": "e36a3ea2-f5b2-4089-9e96-d8b7d80ece32",
+      "title": "你翻我代码库看看 是不是有一个项目是叫 个人知识库的？ github",
+      "created_at": "20260903_042910",
+      "exported_lines": 309,
+      "prompt_tokens": 18659276,
+      "completion_tokens": 296516,
+      "total_tokens": 18955792
+    },
+    {
+      "session_id": "3d1963bf-e3dc-4ea9-8672-79bb8ed0cea6",
+      "title": "帮我把pve密钥去掉。 ssh pve 把现在原始密钥舍弃了重新认证 密码123456",
+      "created_at": "20260904_124452",
+      "exported_lines": 351,
+      "prompt_tokens": 13752895,
+      "completion_tokens": 198541,
+      "total_tokens": 13951436
+    },
+    {
+      "session_id": "123a4d37-a3b2-4cd1-a89a-9469fe14c365",
+      "title": "ssh fnos 看看， 这里我有两个硬盘 你能不能看到。？ 能不能看到一个windows盘",
+      "created_at": "20260905_085835",
+      "exported_lines": 653,
+      "prompt_tokens": 28492010,
+      "completion_tokens": 516244,
+      "total_tokens": 29008254
+    },
+    {
+      "session_id": "560a81d0-e716-4376-8faf-d5e0f0112c23",
+      "title": "ssh win11-slow",
+      "created_at": "20260923_054203",
+      "exported_lines": 690,
+      "prompt_tokens": 7066398,
+      "completion_tokens": 446301,
+      "total_tokens": 7512699
+    },
+    {
+      "session_id": "faf34c26-2059-49d6-b545-221b25ef0225",
+      "title": "ssh win11-slow 帮我看看现在的硬盘结构",
+      "created_at": "20260926_192813",
+      "exported_lines": 1628,
+      "prompt_tokens": 6289879,
+      "completion_tokens": 1221976,
+      "total_tokens": 7511855
+    },
+    {
+      "session_id": "b790b9cf-665d-4dcb-8446-66653150cafb",
+      "title": "查一下我电脑上装了多少虚拟机软件？",
+      "created_at": "20261005_160126",
+      "exported_lines": 130,
+      "prompt_tokens": 7373262,
+      "completion_tokens": 361813,
+      "total_tokens": 7735075
+    },
+    {
+      "session_id": "6c348935-65ce-4670-bdfb-41a9042e6afc",
+      "title": "重新释放我电脑的串口 扫一下有没有新的串口",
+      "created_at": "20261007_102920",
+      "exported_lines": 1060,
+      "prompt_tokens": 8434365,
+      "completion_tokens": 537218,
+      "total_tokens": 8971583
+    },
+    {
+      "session_id": "845c9143-70fd-4d54-a44c-0f848e393ea8",
+      "title": "Untitled Session",
+      "created_at": "20261013_154640",
+      "exported_lines": 14,
+      "prompt_tokens": 25076,
+      "completion_tokens": 127,
+      "total_tokens": 25203
+    },
+    {
+      "session_id": "3091d77e-099c-4d47-b674-a77b3ab51d45",
+      "title": "Untitled Session",
+      "created_at": "20261016_005602",
+      "exported_lines": 37,
+      "prompt_tokens": 56963,
+      "completion_tokens": 41,
+      "total_tokens": 57004
+    },
+    {
+      "session_id": "83073614-3b74-4ee2-bb11-c5c0928b7e8b$$call_c48467fcc77a47e8a2ce8490",
+      "title": "NVIDIA 黑苹果 2025-2026 支持项目",
+      "created_at": "20261016_005612",
+      "exported_lines": 1,
+      "prompt_tokens": 276,
+      "completion_tokens": 19,
+      "total_tokens": 295
+    },
+    {
+      "session_id": "83073614-3b74-4ee2-bb11-c5c0928b7e8b$$call_ac17e9fe8fa3457ab1467508",
+      "title": "NVIDIA GPU Hackintosh Support Project 2025-2026",
+      "created_at": "20261016_005612",
+      "exported_lines": 1,
+      "prompt_tokens": 25963,
+      "completion_tokens": 104,
+      "total_tokens": 26067
+    },
+    {
+      "session_id": "1ccf083c-f0a7-4812-acf1-4e5adbe1499c",
+      "title": "Untitled Session",
+      "created_at": "20261016_110751",
+      "exported_lines": 34,
+      "prompt_tokens": 72221,
+      "completion_tokens": 105,
+      "total_tokens": 72326
+    },
+    {
+      "session_id": "b4e10cf8-d6d3-4cca-bd97-ab050694be1a",
+      "title": "Untitled Session",
+      "created_at": "20261016_110940",
+      "exported_lines": 2,
+      "prompt_tokens": 12149,
+      "completion_tokens": 21,
+      "total_tokens": 12170
+    },
+    {
+      "session_id": "bcc38d5f-45fd-4bab-97aa-e1175760edcd",
+      "title": "Untitled Session",
+      "created_at": "20261020_102835",
+      "exported_lines": 39,
+      "prompt_tokens": 73698,
+      "completion_tokens": 476,
+      "total_tokens": 74174
+    }
+  ]
+}

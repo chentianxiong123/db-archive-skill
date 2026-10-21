@@ -1,0 +1,33 @@
+{
+  "tool": "picoclaw",
+  "storage_mode": "db",
+  "generated_at": "2026-10-21 12:17:29",
+  "source": "/root/.picoclaw/workspace/sessions/seahorse.db",
+  "sessions_total": 3,
+  "sessions_exported": 3,
+  "lines_exported": 44,
+  "dialogue_tokens": 11888,
+  "sessions_detail": [
+    {
+      "session_id": 1,
+      "title": "你上网找的picoclaw找错了吧？ 不是官方仓库把？",
+      "created_at": "20261009_071432",
+      "exported_lines": 33,
+      "dialogue_tokens": 10236
+    },
+    {
+      "session_id": 2,
+      "title": "哟西 你记得我吗",
+      "created_at": "20261010_093758",
+      "exported_lines": 5,
+      "dialogue_tokens": 422
+    },
+    {
+      "session_id": 3,
+      "title": "现在你可以救我一命， 你帮我 恢复sshd 之前不小心关了",
+      "created_at": "20261010_101545",
+      "exported_lines": 6,
+      "dialogue_tokens": 1230
+    }
+  ]
+}

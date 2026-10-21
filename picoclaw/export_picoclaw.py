@@ -44,6 +44,7 @@ def export_db(out_dir):
     total_sessions = 0
     total_lines = 0
     total_tokens = 0
+    session_stats = []
     for cid, skey, created, updated in convs:
         # 会话标题: 找第一条 user 消息
         title_row = cur.execute(
@@ -63,6 +64,13 @@ def export_db(out_dir):
                 continue
             lines.append(json.dumps({"role": role, "content": content}, ensure_ascii=False))
             tok += (tc or 0)
+        session_stats.append({
+            "session_id": cid,
+            "title": title,
+            "created_at": fmt_ts(created),
+            "exported_lines": len(lines),
+            "dialogue_tokens": tok,
+        })
         if not lines:
             continue
         fn = f"{safe(title)}_{fmt_ts(created)}.jsonl"
@@ -73,7 +81,23 @@ def export_db(out_dir):
         total_tokens += tok
         print(f"  {fn}  ({len(lines)} 行, token={tok:,})")
     conn.close()
+
+    stats_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "token_stats.json")
+    stats = {
+        "tool": "picoclaw",
+        "storage_mode": "db",
+        "generated_at": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        "source": SEAHORSE_DB,
+        "sessions_total": len(convs),
+        "sessions_exported": total_sessions,
+        "lines_exported": total_lines,
+        "dialogue_tokens": total_tokens,
+        "sessions_detail": session_stats,
+    }
+    with open(stats_path, "w", encoding="utf-8") as f:
+        json.dump(stats, f, ensure_ascii=False, indent=2)
     print(f"\n[+] DB 模式: {total_sessions} 会话, {total_lines} 行对话, token={total_tokens:,}")
+    print(f"[+] token 统计: {stats_path}")
     return total_sessions, total_lines, total_tokens
 
 def export_jsonl(out_dir):
