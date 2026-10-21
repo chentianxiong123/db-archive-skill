@@ -42,7 +42,15 @@ def export(db_path=None, out_dir=None):
     total_prompt = 0
     total_comp = 0
     session_stats = []
+    daily_stats = {}   # date -> [prompt, completion]
     for sid, title, created, parent, pt, ct in sessions:
+        pt = pt or 0
+        ct = ct or 0
+        day = fmt_ts(created)[:8]   # YYYYMMDD
+        if day != 'unknown':
+            d = daily_stats.setdefault(day, [0, 0])
+            d[0] += pt
+            d[1] += ct
         msgs = conn.execute(
             "SELECT role, parts, created_at FROM messages WHERE session_id = ? ORDER BY created_at",
             (sid,),
@@ -99,6 +107,11 @@ def export(db_path=None, out_dir=None):
 
     # token 统计固定输出: 脚本所在目录 token_stats.json (不进入 chat_jsonl, 不污染归档)
     stats_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "token_stats.json")
+    daily_list = [
+        {"date": f"{d[:4]}-{d[4:6]}-{d[6:8]}", "prompt_tokens": v[0], "completion_tokens": v[1],
+         "total_tokens": v[0] + v[1]}
+        for d, v in sorted(daily_stats.items())
+    ]
     stats = {
         "tool": "crush",
         "generated_at": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
@@ -109,6 +122,7 @@ def export(db_path=None, out_dir=None):
         "prompt_tokens": total_prompt,
         "completion_tokens": total_comp,
         "total_tokens": total_prompt + total_comp,
+        "daily_tokens": daily_list,
         "sessions_detail": session_stats,
     }
     with open(stats_path, "w", encoding="utf-8") as f:

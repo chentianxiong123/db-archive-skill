@@ -1,12 +1,28 @@
 {
   "tool": "picoclaw",
   "storage_mode": "db",
-  "generated_at": "2026-10-21 12:17:29",
+  "generated_at": "2026-10-21 12:21:08",
   "source": "/root/.picoclaw/workspace/sessions/seahorse.db",
   "sessions_total": 3,
   "sessions_exported": 3,
   "lines_exported": 44,
   "dialogue_tokens": 11888,
+  "daily_tokens": [
+    {
+      "date": "2026-10-09",
+      "all_tokens": 56577,
+      "user_tokens": 77,
+      "assistant_tokens": 10159,
+      "tool_tokens": 46341
+    },
+    {
+      "date": "2026-10-10",
+      "all_tokens": 3955,
+      "user_tokens": 24,
+      "assistant_tokens": 1628,
+      "tool_tokens": 2303
+    }
+  ],
   "sessions_detail": [
     {
       "session_id": 1,

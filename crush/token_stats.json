@@ -1,6 +1,6 @@
 {
   "tool": "crush",
-  "generated_at": "2026-10-21 12:17:28",
+  "generated_at": "2026-10-21 12:21:07",
   "source": "/root/.crush/crush.db",
   "sessions_total": 21,
   "sessions_exported": 21,
@@ -8,6 +8,104 @@
   "prompt_tokens": 170085457,
   "completion_tokens": 9414716,
   "total_tokens": 179500173,
+  "daily_tokens": [
+    {
+      "date": "2026-08-12",
+      "prompt_tokens": 12490355,
+      "completion_tokens": 377351,
+      "total_tokens": 12867706
+    },
+    {
+      "date": "2026-08-17",
+      "prompt_tokens": 13115317,
+      "completion_tokens": 194520,
+      "total_tokens": 13309837
+    },
+    {
+      "date": "2026-08-21",
+      "prompt_tokens": 13655,
+      "completion_tokens": 85,
+      "total_tokens": 13740
+    },
+    {
+      "date": "2026-08-28",
+      "prompt_tokens": 7722400,
+      "completion_tokens": 336303,
+      "total_tokens": 8058703
+    },
+    {
+      "date": "2026-08-29",
+      "prompt_tokens": 4457407,
+      "completion_tokens": 844026,
+      "total_tokens": 5301433
+    },
+    {
+      "date": "2026-08-30",
+      "prompt_tokens": 41951892,
+      "completion_tokens": 4082929,
+      "total_tokens": 46034821
+    },
+    {
+      "date": "2026-09-03",
+      "prompt_tokens": 18659276,
+      "completion_tokens": 296516,
+      "total_tokens": 18955792
+    },
+    {
+      "date": "2026-09-04",
+      "prompt_tokens": 13752895,
+      "completion_tokens": 198541,
+      "total_tokens": 13951436
+    },
+    {
+      "date": "2026-09-05",
+      "prompt_tokens": 28492010,
+      "completion_tokens": 516244,
+      "total_tokens": 29008254
+    },
+    {
+      "date": "2026-09-23",
+      "prompt_tokens": 7066398,
+      "completion_tokens": 446301,
+      "total_tokens": 7512699
+    },
+    {
+      "date": "2026-09-26",
+      "prompt_tokens": 6289879,
+      "completion_tokens": 1221976,
+      "total_tokens": 7511855
+    },
+    {
+      "date": "2026-10-05",
+      "prompt_tokens": 7373262,
+      "completion_tokens": 361813,
+      "total_tokens": 7735075
+    },
+    {
+      "date": "2026-10-07",
+      "prompt_tokens": 8434365,
+      "completion_tokens": 537218,
+      "total_tokens": 8971583
+    },
+    {
+      "date": "2026-10-13",
+      "prompt_tokens": 25076,
+      "completion_tokens": 127,
+      "total_tokens": 25203
+    },
+    {
+      "date": "2026-10-16",
+      "prompt_tokens": 167572,
+      "completion_tokens": 290,
+      "total_tokens": 167862
+    },
+    {
+      "date": "2026-10-20",
+      "prompt_tokens": 73698,
+      "completion_tokens": 476,
+      "total_tokens": 74174
+    }
+  ],
   "sessions_detail": [
     {
       "session_id": "f740de85-b35c-4da8-95cc-2bdf164742bf",

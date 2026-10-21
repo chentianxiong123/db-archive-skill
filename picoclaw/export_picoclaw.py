@@ -45,6 +45,18 @@ def export_db(out_dir):
     total_lines = 0
     total_tokens = 0
     session_stats = []
+    daily_stats = {}   # "YYYY-MM-DD" -> tokens (全部消息含 tool)
+
+    # 按天聚合: messages.created_at 是 "YYYY-MM-DD HH:MM:SS", 取前10位
+    for r in cur.execute(
+        "SELECT substr(created_at,1,10), COALESCE(token_count,0), role FROM messages"
+    ).fetchall():
+        day, tc, role = r[0], r[1], r[2]
+        e = daily_stats.setdefault(day, {"all": 0, "user": 0, "assistant": 0, "tool": 0})
+        e["all"] += tc
+        if role in e:
+            e[role] += tc
+
     for cid, skey, created, updated in convs:
         # 会话标题: 找第一条 user 消息
         title_row = cur.execute(
@@ -83,6 +95,11 @@ def export_db(out_dir):
     conn.close()
 
     stats_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "token_stats.json")
+    daily_list = [
+        {"date": d, "all_tokens": v["all"], "user_tokens": v["user"],
+         "assistant_tokens": v["assistant"], "tool_tokens": v["tool"]}
+        for d, v in sorted(daily_stats.items())
+    ]
     stats = {
         "tool": "picoclaw",
         "storage_mode": "db",
@@ -92,6 +109,7 @@ def export_db(out_dir):
         "sessions_exported": total_sessions,
         "lines_exported": total_lines,
         "dialogue_tokens": total_tokens,
+        "daily_tokens": daily_list,
         "sessions_detail": session_stats,
     }
     with open(stats_path, "w", encoding="utf-8") as f:
