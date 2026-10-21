@@ -136,6 +136,19 @@ print('坏行',bad)"
 | 标题全 untitled | meta 无 summary | v2 已改用首条 user 消息为标题 |
 | checkpoint 后仍小 | WAL 主要是 FTS 索引 | 数据量以 messages 表为准 |
 
+## cc-switch 用量回填（可选）
+
+把 picoclaw 的 token 用量写入 cc-switch 的 `usage_daily_rollups` 聚合表（学历史 picoclaw 行的插入方式）：
+
+```bash
+python3 insert_picoclaw_to_ccswitch.py --dry-run      # 生成 SQL 预览
+python3 insert_picoclaw_to_ccswitch.py                # 写入 ~/.cc-switch/cc-switch.db
+```
+
+- 幂等（INSERT OR REPLACE），可重复跑
+- 按会话聚合：model 取会话内 assistant 的 model，token 汇总全部消息（含 tool/user），request_count = assistant 消息数
+- 写入前先备份 cc-switch.db；同一天同批数据勿同时走明细+聚合
+
 ## 硬约束
 
 - **不要**把导出的 `*.jsonl` 提交进 git（`.gitignore` 已覆盖）

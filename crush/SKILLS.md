@@ -116,6 +116,22 @@ print('坏行',bad)"
 | `UnboundLocalError: shutil` | `import shutil` 误放在函数内 | 移到文件顶部 |
 | 查询超时 | 大库全表扫 | 按 session_id 索引查询，勿全表 json_extract |
 
+## cc-switch 用量回填（可选）
+
+把 crush 的 token 用量写入 cc-switch 的 `usage_daily_rollups` 聚合表（不走明细层，学 picoclaw/trae 历史插入方式）：
+
+```bash
+python3 insert_crush_to_ccswitch.py --dry-run        # 生成 SQL 预览(16 行)
+python3 insert_crush_to_ccswitch.py                  # 写入 ~/.cc-switch/cc-switch.db
+python3 insert_crush_to_ccswitch.py --db /path --ccswitch /path
+```
+
+- 幂等（INSERT OR REPLACE），可重复跑
+- 按 (date, model) 聚合，request_count = 当天会话数
+- `total_cost_usd='0'` 让 cc-switch 的 backfill 按 model_pricing 自动补价
+- ⚠️ 写入前先备份 cc-switch.db（脚本不会自动备份，执行前手动 cp）
+- ⚠️ 同一天同一批数据**绝不同时走明细+聚合**（rollup 会 LEFT JOIN 合并导致双倍）
+
 ## 硬约束
 
 - **不要**把导出的 `*.jsonl` 提交进 git（`.gitignore` 已覆盖，别手动 `git add -f`）
