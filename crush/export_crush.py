@@ -4,7 +4,7 @@
 import argparse, json, os, re, shutil, sqlite3
 from datetime import datetime
 
-DEFAULT_DB = "/mnt/shared/.crush/crush.db"
+DEFAULT_DB = os.path.expanduser("~/.crush/crush.db")
 DEFAULT_OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "crush_chat_jsonl")
 
 def safe(s, maxlen=80):
@@ -76,18 +76,15 @@ def export(db_path=None, out_dir=None):
                 lines.append(json.dumps({"role": role, "content": text}, ensure_ascii=False))
         if not lines:
             continue
-        ws = 'crush_' + safe(fmt_ts(created)[:8])
-        wd = os.path.join(out_dir, ws)
-        os.makedirs(wd, exist_ok=True)
         fn = f"{safe(title or 'untitled')}_{fmt_ts(created)}.jsonl"
-        fp = os.path.join(wd, fn)
+        fp = os.path.join(out_dir, fn)
         with open(fp, 'w', encoding='utf-8') as f:
             f.write('\n'.join(lines) + '\n')
         total_sessions += 1
         total_lines += len(lines)
         total_prompt += (pt or 0)
         total_comp += (ct or 0)
-        print(f"  {ws}/{fn}  ({len(lines)} 行, prompt={pt or 0:,} comp={ct or 0:,})")
+        print(f"  {fn}  ({len(lines)} 行, prompt={pt or 0:,} comp={ct or 0:,})")
     conn.close()
     print(f"\n[+] {total_sessions} 个会话, {total_lines} 行对话 -> {out_dir}")
     print(f"[+] token 合计: prompt={total_prompt:,} completion={total_comp:,} total={total_prompt+total_comp:,}")

@@ -1,12 +1,12 @@
 """Export picoclaw chat sessions to JSONL — v2: 优先读 seahorse.db (DB 模式, 含 token 统计), JSONL 作 fallback.
-契约与 agent-db-archive 其他工具一致: {role, content} 每行一个 JSON.
+契约与 agent-db-archive 其他工具一致: {role, content} 每行一个 JSON. 产物平铺在 {工具}_chat_jsonl/
 """
 import argparse, json, os, re, shutil, sqlite3
 from datetime import datetime
 
 # picoclaw 数据位置
-SEAHORSE_DB = "/root/.picoclaw/workspace/sessions/seahorse.db"
-SESS_DIR = "/root/.picoclaw/workspace/sessions"
+SEAHORSE_DB = os.path.expanduser("~/.picoclaw/workspace/sessions/seahorse.db")
+SESS_DIR = os.path.expanduser("~/.picoclaw/workspace/sessions")
 DEFAULT_OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "picoclaw_chat_jsonl")
 
 def safe(s, maxlen=60):
@@ -65,16 +65,13 @@ def export_db(out_dir):
             tok += (tc or 0)
         if not lines:
             continue
-        ws = "picoclaw"
-        wd = os.path.join(out_dir, ws)
-        os.makedirs(wd, exist_ok=True)
         fn = f"{safe(title)}_{fmt_ts(created)}.jsonl"
-        with open(os.path.join(wd, fn), "w", encoding="utf-8") as f:
+        with open(os.path.join(out_dir, fn), "w", encoding="utf-8") as f:
             f.write("\n".join(lines) + "\n")
         total_sessions += 1
         total_lines += len(lines)
         total_tokens += tok
-        print(f"  {ws}/{fn}  ({len(lines)} 行, token={tok:,})")
+        print(f"  {fn}  ({len(lines)} 行, token={tok:,})")
     conn.close()
     print(f"\n[+] DB 模式: {total_sessions} 会话, {total_lines} 行对话, token={total_tokens:,}")
     return total_sessions, total_lines, total_tokens
@@ -107,10 +104,8 @@ def export_jsonl(out_dir):
             if not content.strip() or content.strip().startswith("diff --git"): continue
             lines.append(json.dumps({"role": role, "content": content}, ensure_ascii=False))
         if not lines: continue
-        wd = os.path.join(out_dir, "picoclaw")
-        os.makedirs(wd, exist_ok=True)
         fn_out = f"{safe(title)}_{fmt_ts(created)}.jsonl"
-        with open(os.path.join(wd, fn_out), "w", encoding="utf-8") as f:
+        with open(os.path.join(out_dir, fn_out), "w", encoding="utf-8") as f:
             f.write("\n".join(lines) + "\n")
         total_sessions += 1
         total_lines += len(lines)
