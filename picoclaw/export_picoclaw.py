@@ -1,10 +1,12 @@
-"""Export picoclaw chat sessions to JSONL — 模仿 agent-db-archive/opencode 契约 v2.
-用 meta.summary 作为标题(截断), meta.created_at 作为时间戳.
+"""Export picoclaw chat sessions to JSONL — v2: 优先读 seahorse.db (DB 模式, 含 token 统计), JSONL 作 fallback.
+契约与 agent-db-archive 其他工具一致: {role, content} 每行一个 JSON.
 """
-import argparse, json, os, re, shutil
+import argparse, json, os, re, shutil, sqlite3
 from datetime import datetime
 
-SESS_DIR = "/mnt/shared/.picoclaw/workspace/sessions"
+# picoclaw 数据位置
+SEAHORSE_DB = "/root/.picoclaw/workspace/sessions/seahorse.db"
+SESS_DIR = "/root/.picoclaw/workspace/sessions"
 DEFAULT_OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "picoclaw_chat_jsonl")
 
 def safe(s, maxlen=60):
@@ -13,7 +15,6 @@ def safe(s, maxlen=60):
     return s or 'untitled'
 
 def fmt_ts(ts):
-    # 兼容时间戳和 ISO 字符串
     if isinstance(ts, (int, float)):
         if ts > 1e12: ts /= 1000
         dt = datetime.fromtimestamp(ts)
@@ -29,18 +30,57 @@ def fmt_ts(ts):
 
 def summary_title(md):
     s = md.get("summary") or ""
-    # 摘要第一行文本作为标题
     for line in s.split("\n"):
         line = line.strip().lstrip("#* -")
         if line and not line.startswith("**"):
             return line[:40]
     return s[:40] or "untitled"
 
-def export(out_dir=None):
-    out_dir = out_dir or DEFAULT_OUT
-    if os.path.exists(out_dir):
-        shutil.rmtree(out_dir)
-    os.makedirs(out_dir, exist_ok=True)
+def export_db(out_dir):
+    """DB 模式: 读 seahorse.db, messages 有 token_count, summaries 有压缩摘要"""
+    conn = sqlite3.connect(f"file:{SEAHORSE_DB}?mode=ro", uri=True)
+    cur = conn.cursor()
+    convs = cur.execute("SELECT conversation_id, session_key, created_at, updated_at FROM conversations ORDER BY created_at").fetchall()
+    total_sessions = 0
+    total_lines = 0
+    total_tokens = 0
+    for cid, skey, created, updated in convs:
+        # 会话标题: 找第一条 user 消息
+        title_row = cur.execute(
+            "SELECT content FROM messages WHERE conversation_id=? AND role='user' AND content!='' ORDER BY created_at LIMIT 1",
+            (cid,)).fetchone()
+        title = title_row[0][:60] if title_row else "untitled"
+        msgs = cur.execute(
+            "SELECT role, content, token_count, created_at FROM messages WHERE conversation_id=? AND role IN ('user','assistant') ORDER BY created_at",
+            (cid,)).fetchall()
+        lines = []
+        tok = 0
+        for role, content, tc, ts in msgs:
+            if not content or not content.strip():
+                continue
+            content = re.sub(r'\n*\[Assistant tool call\]: .*$', '', content, flags=re.DOTALL)
+            if not content.strip() or content.strip().startswith("diff --git"):
+                continue
+            lines.append(json.dumps({"role": role, "content": content}, ensure_ascii=False))
+            tok += (tc or 0)
+        if not lines:
+            continue
+        ws = "picoclaw"
+        wd = os.path.join(out_dir, ws)
+        os.makedirs(wd, exist_ok=True)
+        fn = f"{safe(title)}_{fmt_ts(created)}.jsonl"
+        with open(os.path.join(wd, fn), "w", encoding="utf-8") as f:
+            f.write("\n".join(lines) + "\n")
+        total_sessions += 1
+        total_lines += len(lines)
+        total_tokens += tok
+        print(f"  {ws}/{fn}  ({len(lines)} 行, token={tok:,})")
+    conn.close()
+    print(f"\n[+] DB 模式: {total_sessions} 会话, {total_lines} 行对话, token={total_tokens:,}")
+    return total_sessions, total_lines, total_tokens
+
+def export_jsonl(out_dir):
+    """fallback: 纯 JSONL 模式 (无 token 统计)"""
     total_sessions = 0
     total_lines = 0
     for fn in sorted(os.listdir(SESS_DIR)):
@@ -67,20 +107,30 @@ def export(out_dir=None):
             if not content.strip() or content.strip().startswith("diff --git"): continue
             lines.append(json.dumps({"role": role, "content": content}, ensure_ascii=False))
         if not lines: continue
-        ws = "picoclaw"
-        wd = os.path.join(out_dir, ws)
+        wd = os.path.join(out_dir, "picoclaw")
         os.makedirs(wd, exist_ok=True)
         fn_out = f"{safe(title)}_{fmt_ts(created)}.jsonl"
         with open(os.path.join(wd, fn_out), "w", encoding="utf-8") as f:
             f.write("\n".join(lines) + "\n")
         total_sessions += 1
         total_lines += len(lines)
-        print(f"  {ws}/{fn_out}  ({len(lines)} 行)")
-    print(f"\n[+] {total_sessions} 个会话, {total_lines} 行对话 -> {out_dir}")
-    return out_dir
+        print(f"  picoclaw/{fn_out}  ({len(lines)} 行)")
+    print(f"\n[+] JSONL 模式: {total_sessions} 会话, {total_lines} 行对话")
+    return total_sessions, total_lines, 0
+
+def export(out_dir=None, force_jsonl=False):
+    out_dir = out_dir or DEFAULT_OUT
+    if os.path.exists(out_dir):
+        shutil.rmtree(out_dir)
+    os.makedirs(out_dir, exist_ok=True)
+    # 优先 DB 模式
+    if os.path.exists(SEAHORSE_DB) and not force_jsonl:
+        return export_db(out_dir)
+    return export_jsonl(out_dir)
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(description="导出 picoclaw 会话为 JSONL")
+    ap = argparse.ArgumentParser(description="导出 picoclaw 会话为 JSONL (v2: DB 优先)")
     ap.add_argument("--out", default=DEFAULT_OUT)
+    ap.add_argument("--force-jsonl", action="store_true", help="强制用纯 JSONL 模式")
     args = ap.parse_args()
-    export(args.out)
+    export(args.out, args.force_jsonl)
