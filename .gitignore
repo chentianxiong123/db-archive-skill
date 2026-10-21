@@ -29,3 +29,7 @@ hermes_chat_jsonl/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# 统计文件(含会话标题=隐私), 不入库
+token_stats.json
+*_token_stats.json
