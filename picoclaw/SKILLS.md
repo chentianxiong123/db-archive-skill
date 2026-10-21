@@ -92,9 +92,14 @@ DB 模式自动打印（只统计 user+assistant 对话），并**固定写入�
   "source": "~/.picoclaw/workspace/sessions/seahorse.db",
   "sessions_total": 3, "sessions_exported": 3, "lines_exported": 44,
   "dialogue_tokens": 11888,
+  "daily_tokens": [ { "date": "YYYY-MM-DD", "all_tokens": N, "user_tokens": N,
+                      "assistant_tokens": N, "tool_tokens": N } ],
   "sessions_detail": [ { "session_id", "title", "created_at", "exported_lines", "dialogue_tokens" } ]
 }
 ```
+
+- `daily_tokens`：**消息级按天精确聚合**（messages.created_at 前 10 位归天），比 crush 更精细
+- 含角色细分（user/assistant/tool），all_tokens = 当天全部消息 token 含 tool
 
 | 角色 | 消息数 | tokens |
 |------|--------|--------|

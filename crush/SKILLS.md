@@ -97,10 +97,15 @@ print('坏行',bad)"
   "source": "/root/.crush/crush.db",
   "sessions_total": 21, "sessions_exported": 21, "lines_exported": 13739,
   "prompt_tokens": 170085457, "completion_tokens": 9414716, "total_tokens": 179500173,
+  "daily_tokens": [ { "date": "YYYY-MM-DD", "prompt_tokens": N, "completion_tokens": N,
+                      "total_tokens": N } ],
   "sessions_detail": [ { "session_id", "title", "created_at", "exported_lines",
                          "prompt_tokens", "completion_tokens", "total_tokens" } ]
 }
 ```
+
+- `daily_tokens`：按天聚合（token 在 sessions 表按会话记，**按会话 created_at 归天**，非消息级）
+- daily 数组按日期升序，便于画折线图 / 趋势分析
 
 ## 常见失败
 
