@@ -1,4 +1,4 @@
-# agent-chat-exporter
+# db-archive-skill
 
 [![Python 3.8+](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -70,7 +70,7 @@ cd picoclaw && python3 export_picoclaw.py
 ## 项目结构
 
 ```
-agent-chat-exporter/
+db-archive-skill/
 ├── trae/         # Trae CN — SQLCipher 4，三步流水线：取密钥 → 解密 → 导出
 ├── hermes/       # Hermes — 明文 SQLite
 ├── opencode/     # OpenCode CLI — 明文 SQLite，只导顶层会话，子代理自动跳过

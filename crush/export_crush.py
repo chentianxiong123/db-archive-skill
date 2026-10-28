@@ -1,4 +1,4 @@
-"""Export crush (goose) chat sessions to JSONL — 模仿 agent-db-archive/opencode 契约.
+"""Export crush (goose) chat sessions to JSONL — 模仿 db-archive-skill/opencode 契约.
 仅取 type=text 的 part, 过滤内部噪声. 输出: crush_chat_jsonl/{分类}/{标题}_{时间戳}.jsonl
 """
 import argparse, json, os, re, shutil, sqlite3

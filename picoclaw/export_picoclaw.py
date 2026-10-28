@@ -1,5 +1,5 @@
 """Export picoclaw chat sessions to JSONL — v2: 优先读 seahorse.db (DB 模式, 含 token 统计), JSONL 作 fallback.
-契约与 agent-db-archive 其他工具一致: {role, content} 每行一个 JSON. 产物平铺在 {工具}_chat_jsonl/
+契约与 db-archive-skill 其他工具一致: {role, content} 每行一个 JSON. 产物平铺在 {工具}_chat_jsonl/
 """
 import argparse, json, os, re, shutil, sqlite3
 from datetime import datetime

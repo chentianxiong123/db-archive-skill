@@ -26,7 +26,7 @@ crush 的 SQLite 库 `sessions` 表自带用量统计，导出时脚本会打印
 [+] token 合计: prompt=170,085,457 completion=9,414,716 total=179,500,173
 ```
 
-这是 agent-chat-exporter 里**唯一一个数据库自带 token 统计**的工具，其他工具（opencode/trae/hermes）都要靠估算。
+这是 db-archive-skill 里**唯一一个数据库自带 token 统计**的工具，其他工具（opencode/trae/hermes）都要靠估算。
 
 ## 导出什么
 

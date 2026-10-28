@@ -1,6 +1,6 @@
 # 方法论：AI 工具本地聊天数据 → 统一 JSONL
 
-> 本文是 agent-chat-exporter 的**扩展手册**——如何给新工具写导出器。已有的 6 个工具（trae/hermes/opencode/qq-phone/crush/picoclaw）都是按这套方法论做的。目标是"看到新工具的数据库，10 分钟写一个导出器"。
+> 本文是 db-archive-skill 的**扩展手册**——如何给新工具写导出器。已有的 6 个工具（trae/hermes/opencode/qq-phone/crush/picoclaw）都是按这套方法论做的。目标是"看到新工具的数据库，10 分钟写一个导出器"。
 
 ## 一、核心契约
 
