@@ -26,6 +26,10 @@
 | [Crush / Goose](crush/) | 明文 SQLite | 无 | 跨平台 | ✅ 库自带 (prompt/completion/cost) | ✅ 完成 |
 | [PicoClaw](picoclaw/) | 纯 JSONL | 无 | 跨平台 | —（无记录，需估算） | ✅ 完成 |
 
+## 附加模块（非 agent 聊天导出）
+
+[weixin/](weixin/) 是独立交付物：**微信老版本（7.0.17）数据提取**——HiSuite 备份解密聊天库/app 数据（`encMsgV3`+PBKDF2+GCM）+ **`adb` 直取 sdcard 媒体原件**，产出 TSV/HTML/媒体文件，**不产出统一 JSONL**（因此不进上面的工具表）。详见 `weixin/SKILLS.md` 的版本适用范围与附录 A（失败探索存档）。
+
 > 🧭 想加新工具？先读 [METHODOLOGY.md](METHODOLOGY.md)——扩展新 AI 工具导出器的五步方法论 + 验证清单。
 
 ## 输出格式
@@ -73,6 +77,7 @@ agent-chat-exporter/
 ├── qq-phone/     # QQ Android — XOR 加密，含密钥推导分析
 ├── crush/        # Crush (Block's Goose) — 明文 SQLite，part 双格式兼容，库自带 token 统计
 ├── picoclaw/     # PicoClaw — 纯 JSONL 会话文件，无数据库
+├── weixin/       # 微信 7.0.17 华为 HiSuite 备份解密（独立交付物，非 JSONL）
 ├── METHODOLOGY.md  # 扩展新工具的通用方法论 + 验证清单
 ├── README.md
 ├── LICENSE       # MIT
