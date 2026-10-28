@@ -16,8 +16,8 @@
 
 ## 两条主路径（核心）
 
-1. **聊天库 + app 数据**（HiSuite 备份）：`decrypt_v3.py` 用**每模块 `encMsgV3`** 派生 `PBKDF2-HMAC-SHA256(pwd, encMsgV3[:32], 5000, 32)` + **AES-256-GCM**（`nonce=encMsgV3[32:48]`，密文||tag 后 16B）→ 明文 `.db` / `com.tencent.mm.data.tar`
-2. **媒体原件**（5.1 GB / 77,447 文件）：**`adb pull /sdcard/tencent/MicroMsg/ ./wechat_media`** —— 不需要解密备份里的 `WechatTar/`（那是另一套密钥，昨天 CTR 失败，见附录 A）
+1. **聊天库 + app 数据**（HiSuite 备份）：`tools/decrypt_v3.py` 用**每模块 `encMsgV3`** 派生 `PBKDF2-HMAC-SHA256(pwd, encMsgV3[:32], 5000, 32)` + **AES-256-GCM**（`nonce=encMsgV3[32:48]`，密文||tag 后 16B）→ 明文 `.db` / `com.tencent.mm.data.tar`
+2. **媒体原件**（5.1 GB / 77,447 文件）：**`adb pull /sdcard/tencent/MicroMsg/ ./wechat_media`** —— 不需要解密备份里的 `WechatTar/`（那是另一套密钥，见附录 A）
 
 ## 交付物
 
@@ -45,22 +45,24 @@ wechat-backup-decrypt/
 ## 使用
 
 1. 跑 [SKILLS.md](SKILLS.md) **第零步**确认版本（v3 + Multimedia v2）
-2. **`decrypt_v3.py`** 解模块文件（encMsgV3 + PBKDF2 + GCM，`--verify` 校验 checkMsgV3）
+2. **`tools/decrypt_v3.py`** 解模块文件（encMsgV3 + PBKDF2 + GCM，`--verify` 校验 checkMsgV3）
 3. **`adb pull /sdcard/tencent/MicroMsg/`** 直取媒体原件（无需解 `WechatTar/`）
-4. EnMicroMsg.db 用 SQLCipher 解密（微信库密码）
-5. 按上表对齐 message 表 → `media_map.csv`
+4. **`tools/decrypt_db.py`** 解密 EnMicroMsg.db（SQLCipher，微信库密码）+ WAL 合并 → 明文 `decrypted.db` + 导出 `messages-text.tsv` / `wechat-chat-export.html`
+5. **`tools/align_media.py`** 对齐 message 表 → `media_map.csv`
 
 ## 依赖
 
 - Python 3.8+、`pycryptodome`（AES-GCM / PBKDF2）
 - `sqlcipher3` / `pysqlcipher3`（EnMicroMsg.db）
 - `adb`（Android platform-tools，媒体直取）
-- `decrypt_v3.py`（encMsgV3 模块文件解密器）
+- `tools/decrypt_v3.py`（encMsgV3 模块文件解密器）
+- `tools/decrypt_db.py`（EnMicroMsg.db SQLCipher 解密 + 导出）
+- `tools/align_media.py`（消息 → 媒体对齐 media_map.csv）
 
 ## 已知坑（详见 SKILLS.md 常见失败 + 附录 A）
 
 - **别用 kobackupdec 解媒体**：`SHA256(密码)[:16]`+CTR 对 `WechatTar/` 失败（媒体是另一套 key）；`decrypt_file` 还有 `dm.iv` hex 字符串 bug
-- **媒体走 adb**，别碰 `WechatTar/`（附录 A2/A3 是失败探索存档）
+- **媒体走 adb**，别碰 `WechatTar/`（附录 A 是失败探索存档，脚本在 `archive-failures/`）
 - `checkMsg` 是 null → 用 `decrypt_v3.py` 直接读 `encMsgV3`/`checkMsgV3`
 - 语音/视频对齐必须 `[0-9a-f]{20,}`，`{32}` 会漏光
 - 长路径 `\\?\` 前缀 + 非法字符替换（解包）

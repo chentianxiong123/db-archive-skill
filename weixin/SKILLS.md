@@ -37,7 +37,7 @@ print(m.group(1) if m else 'no BackupFilesTypeInfo')
 3. **sdcard 媒体原件**：**`adb pull` 直接从手机拉取**（原图/视频/语音/表情等，5.1 GB / 77,447 文件）——**不需要解密备份里的 `WechatTar/`**
 4. **媒体 ↔ 消息对齐**：把媒体文件按 `message` 表的 `imgPath`/`content` 字段精确映射到聊天记录
 
-依赖：Python 3.8+、`pycryptodome`（AES/PBKDF2）、`sqlcipher3` 或 `pysqlcipher3`（EnMicroMsg.db）、**`adb`（Android platform-tools）**。
+依赖：Python 3.8+、`pycryptodome`（AES/PBKDF2）、`sqlcipher3` 或 `pysqlcipher3`（EnMicroMsg.db）、**`adb`（Android platform-tools）**。脚本：`tools/decrypt_v3.py`、`tools/extract_mm.py`、`tools/decrypt_db.py`、`tools/align_media.py`。
 
 ## 前置条件
 
@@ -110,6 +110,11 @@ python tools/extract_mm.py "decrypted/com.tencent.mm.data.tar" "mmdata/"
 
 ## 第三步：EnMicroMsg.db 解密 + 导出聊天
 
+```bash
+# tools/decrypt_db.py —— SQLCipher 解密 + WAL 合并 + 导出明文 + tsv/html
+python tools/decrypt_db.py <EnMicroMsg.db> <微信库密码> <输出目录>
+```
+
 ```python
 # SQLCipher 解密 (密码 = 微信库密码, 例 555be53)
 # 用 sqlcipher3 / pysqlcipher3, 打开后合并 WAL:
@@ -144,6 +149,11 @@ adb pull /sdcard/tencent/MicroMsg/ ./wechat_media
 > **为什么不用备份解密**：`WechatTar/`（6.1 GB，93 片 `.tar.enc`）用的是 Multimedia v2 材料 + **另一套密钥**（`backupinfo.ini` 的 `derivedSalt`/`pwdsalt`/`password`，非外层密码）——昨天的 v3 CTR 尝试失败，**没解通**（见附录 A）。adb 直取绕开全部加密。
 
 ## 第五步：媒体 ↔ 消息对齐（核心产出）
+
+```bash
+# tools/align_media.py —— message 表 → media_map.csv (逐类型映射)
+python tools/align_media.py decrypted.db wechat_media media_map.csv
+```
 
 `message` 表的媒体消息（`type`）映射到媒体文件。**微信 7.0.17 老版存储规则**（已逐条实测验证）：
 
@@ -221,7 +231,7 @@ du -sh wechat_media                                   # 5.1 GB
 
 ## 附录 A：失败探索记录（保留备查，勿再走弯路）
 
-> 昨天的弯路。**主路径已明确（encMsgV3+GCM 解模块文件 / adb 直取媒体），以下仅存档，别再尝试。**
+> 昨天的弯路。**主路径已明确（encMsgV3+GCM 解模块文件 / adb 直取媒体），以下仅存档，别再尝试。** 失败脚本在 `archive-failures/`。
 
 ### A1. kobackupdec 的 `SHA256(密码)[:16]` + CTR 解 `WechatTar` —— **失败**
 

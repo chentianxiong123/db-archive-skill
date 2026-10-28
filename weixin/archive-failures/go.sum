@@ -1,0 +1,4 @@
+github.com/Lensual/KobackupCipherTool-go v0.0.0-20260226232747-618e37fc1f80 h1:At0mu7G4T6TWDZpqFcjNTHVtVUFnVd4bcQvLDssttEI=
+github.com/Lensual/KobackupCipherTool-go v0.0.0-20260226232747-618e37fc1f80/go.mod h1:UdaBYYmPSFAkhXXe9Qg3s9abm6biBu3NUTuObUva9gk=
+golang.org/x/crypto v0.48.0 h1:/VRzVqiRSggnhY7gNRxPauEQ5Drw9haKdM0jqfcCFts=
+golang.org/x/crypto v0.48.0/go.mod h1:r0kV5h3qnFPlQnBSrULhlsRfryS2pmewsg+XfMgkVos=
