@@ -29,6 +29,7 @@
 ## 附加模块（非 agent 聊天导出）
 
 [weixin/](weixin/) 是独立交付物：**微信老版本（7.0.17）数据提取**——HiSuite 备份解密聊天库/app 数据（`encMsgV3`+PBKDF2+GCM）+ **`adb` 直取 sdcard 媒体原件**，产出 TSV/HTML/媒体文件，**不产出统一 JSONL**（因此不进上面的工具表）。详见 `weixin/SKILLS.md` 的版本适用范围与附录 A（失败探索存档）。
+[ccswitch/](ccswitch/) 是独立交付物：**CC Switch 用量记录跨机器迁移**——把 `~/.cc-switch/cc-switch.db` 中所有 agent（DSH/OMP/Pi/OpenCode/Codex/Gemini/GrokBuild/MCode/Antigravity/Kimi/Copilot/WorkBuddy）的调用记录（`proxy_request_logs` + 日汇总 `usage_daily_rollups` + 去重收据 `session_usage_dedup`）搬到另一台机器，**不迁会话记录、不迁本机路径游标**（`session_log_sync`），幂等、可回滚、自动备份两端 DB。详见 `ccswitch/README.md`。
 
 > 🧭 想加新工具？先读 [METHODOLOGY.md](METHODOLOGY.md)——扩展新 AI 工具导出器的五步方法论 + 验证清单。
 
@@ -63,7 +64,7 @@ cd crush && python3 export_crush.py
 cd picoclaw && python3 export_picoclaw.py
 ```
 
-> 🤖 **用 AI 跑？** 每个工具目录（`trae/` `hermes/` `qq-phone/` `opencode/` `crush/` `picoclaw/`）都自带一份 `SKILLS.md` —— 给 AI 助手读的操作手册：前置条件、命令、失败模式对照表、校验方式。把对应子目录丢给任意 AI 编程助手，它能自己判断前置条件、跑命令、校验结果。
+> 🤖 **用 AI 跑？** 每个工具目录（`trae/` `hermes/` `qq-phone/` `opencode/` `crush/` `picoclaw/` `ccswitch/`）都自带一份 `SKILLS.md` —— 给 AI 助手读的操作手册：前置条件、命令、失败模式对照表、校验方式。把对应子目录丢给任意 AI 编程助手，它能自己判断前置条件、跑命令、校验结果。
 
 每个子目录都是独立工具，有各自的 README 说明原理和数据库结构。
 
@@ -78,6 +79,7 @@ db-archive-skill/
 ├── crush/        # Crush (Block's Goose) — 明文 SQLite，part 双格式兼容，库自带 token 统计
 ├── picoclaw/     # PicoClaw — 纯 JSONL 会话文件，无数据库
 ├── weixin/       # 微信 7.0.17 华为 HiSuite 备份解密（独立交付物，非 JSONL）
+├── ccswitch/     # CC Switch 用量记录跨机器迁移（调用记录，非会话）
 ├── METHODOLOGY.md  # 扩展新工具的通用方法论 + 验证清单
 ├── README.md
 ├── LICENSE       # MIT
