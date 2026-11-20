@@ -154,6 +154,7 @@ grep -rn "password\|api-key\|BEGIN.*PRIVATE" *_chat_jsonl/ | head   # 提醒不�
 | qq-phone | SQLite+XOR | 两套密钥推导 | 无 |
 | **crush** | 明文 SQLite | part 双格式兼容 | ✅ **库自带**（sessions.prompt_tokens/completion_tokens） |
 | **picoclaw** | 纯 JSONL 文件 | 无数据库 | ❌ 无记录，需估算 |
+| **dsh** | zstd JSONL 事件流 + projcache JSON | zstd 压缩（`zstd -d`） | ✅ **projcache token 统计**（input/output/cache） |
 
 ## 五、扩展新工具的 checklist
 
