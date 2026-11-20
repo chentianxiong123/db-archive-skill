@@ -10,7 +10,7 @@
 
 各 AI 工具的聊天记录都被锁在各自的本地数据库里，格式互不兼容、有的还加密。这个工具集把数据库解密、读取、清洗成统一的 JSONL，方便你备份、迁移、分析或做训练数据。
 
-- **跨工具统一** — 七个工具的聊天数据落到同一种 `{role, content}` 结构
+- **跨工具统一** — 八个工具的聊天数据落到同一种 `{role, content}` 结构
 - **本地处理** — 全部在你自己的机器上跑，数据不上传任何服务器
 - **噪声清洗** — 系统提示、工具回调、上下文压缩摘要等内部噪声已过滤，输出是干净的可读对话
 - **token 统计** — crush/goose 的库自带用量统计，导出时直接出报表
@@ -24,7 +24,9 @@
 | [OpenCode](opencode/) | 明文 SQLite | 无 | 跨平台 | — | ✅ 完成 |
 | [QQ Android](qq-phone/) | SQLite + XOR | 两套 XOR 密钥 | 需 root 提机，脚本跨平台 | — | ✅ 完成 |
 | [Crush / Goose](crush/) | 明文 SQLite | 无 | 跨平台 | ✅ 库自带 (prompt/completion/cost) | ✅ 完成 |
+| [PicoClaw](picoclaw/) | 纯 JSONL | 无 | 跨平台 | —（无记录，需估算） | ✅ 完成 |
 | [DSH / DeepSeek Harness](dsh/) | zstd JSONL 事件流 | zstd 压缩 | 跨平台 | ✅ projcache token 统计 | ✅ 完成 |
+| [omp / pi-coding-agent](omp/) | JSONL 事件流 + SQLite | 无 | 跨平台 | —（agent.db 按模型聚合） | ✅ 完成 |
 
 ## 附加模块（非 agent 聊天导出）
 
@@ -66,10 +68,12 @@ cd picoclaw && python3 export_picoclaw.py
 # DSH / DeepSeek Harness（跨平台，需 zstd CLI）
 cd dsh && python3 export_dsh.py
 
-cd dsh && python3 export_dsh.py
+# omp / pi-coding-agent（跨平台，只读 DB）
+cd omp && python3 export_omp.py
+
 ```
 
-> 🤖 **用 AI 跑？** 每个工具目录（`trae/` `hermes/` `qq-phone/` `opencode/` `crush/` `picoclaw/` `dsh/` `ccswitch/`）都自带一份 `SKILLS.md` —— 给 AI 助手读的操作手册：前置条件、命令、失败模式对照表、校验方式。把对应子目录丢给任意 AI 编程助手，它能自己判断前置条件、跑命令、校验结果。
+> 🤖 **用 AI 跑？** 每个工具目录（`trae/` `hermes/` `qq-phone/` `opencode/` `crush/` `picoclaw/` `dsh/` `omp/` `ccswitch/`）都自带一份 `SKILLS.md` —— 给 AI 助手读的操作手册：前置条件、命令、失败模式对照表、校验方式。把对应子目录丢给任意 AI 编程助手，它能自己判断前置条件、跑命令、校验结果。
 
 每个子目录都是独立工具，有各自的 README 说明原理和数据库结构。
 
@@ -84,6 +88,7 @@ db-archive-skill/
 ├── crush/        # Crush (Block's Goose) — 明文 SQLite，part 双格式兼容，库自带 token 统计
 ├── picoclaw/     # PicoClaw — 纯 JSONL 会话文件，无数据库
 ├── dsh/          # DSH (DeepSeek Harness) — zstd JSONL 事件流 + projcache token 统计
+├── omp/          # omp / pi-coding-agent — JSONL 事件流 + 只读 SQLite 标题
 ├── weixin/       # 微信 7.0.17 华为 HiSuite 备份解密（独立交付物，非 JSONL）
 ├── ccswitch/     # CC Switch 用量记录跨机器迁移（调用记录，非会话）
 ├── METHODOLOGY.md  # 扩展新工具的通用方法论 + 验证清单
